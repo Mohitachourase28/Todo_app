@@ -1,52 +1,36 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import axiosInstance from "axios";
 
-// Get all tasks
-export const fetchTasks = createAsyncThunk(
-  "tasks/fetchTasks",
-  async (_, thunkAPI) => {
-    try {
-      const res = await axios.get("http://localhost:5000/api/tasks", {
-        withCredentials: true,
-      });
-      return res.data;
-    } catch (err) {
-      return thunkAPI.rejectWithValue(
-        err.response?.data?.error || "Failed to fetch tasks"
-      );
-    }
+// Fetch all tasks
+export const fetchTasks = createAsyncThunk("tasks/fetchTasks", async (_, thunkAPI) => {
+  try {
+    const res = await axiosInstance.get("/tasks");
+    return res.data;
+  } catch (err) {
+    return thunkAPI.rejectWithValue(
+      err.response?.data?.error || "Failed to fetch tasks"
+    );
   }
-);
+});
 
 // Create a new task
-export const createTask = createAsyncThunk(
-  "tasks/createTask",
-  async (taskData, thunkAPI) => {
-    try {
-      const res = await axios.post(
-        "http://localhost:5000/api/tasks",
-        taskData,
-        { withCredentials: true }
-      );
-      return res.data;
-    } catch (err) {
-      return thunkAPI.rejectWithValue(
-        err.response?.data?.error || "Failed to create task"
-      );
-    }
+export const createTask = createAsyncThunk("tasks/createTask", async (taskData, thunkAPI) => {
+  try {
+    const res = await axiosInstance.post("/tasks", taskData);
+    return res.data;
+  } catch (err) {
+    return thunkAPI.rejectWithValue(
+      err.response?.data?.error || "Failed to create task"
+    );
   }
-);
+});
 
 // Update a task
 export const updateTask = createAsyncThunk(
   "tasks/updateTask",
   async ({ id, data }, thunkAPI) => {
     try {
-      const res = await axios.put(
-        `http://localhost:5000/api/tasks/${id}`,
-        data,
-        { withCredentials: true }
-      );
+      const res = await axiosInstance.put(`/tasks/${id}`, data);
       return res.data;
     } catch (err) {
       return thunkAPI.rejectWithValue(
@@ -57,50 +41,35 @@ export const updateTask = createAsyncThunk(
 );
 
 // Delete a task
-export const deleteTask = createAsyncThunk(
-  "tasks/deleteTask",
-  async (id, thunkAPI) => {
-    try {
-      await axios.delete(`http://localhost:5000/api/tasks/${id}`, {
-        withCredentials: true,
-      });
-      return id;
-    } catch (err) {
-      return thunkAPI.rejectWithValue(
-        err.response?.data?.error || "Failed to delete task"
-      );
-    }
+export const deleteTask = createAsyncThunk("tasks/deleteTask", async (id, thunkAPI) => {
+  try {
+    await axiosInstance.delete(`/tasks/${id}`);
+    return id;
+  } catch (err) {
+    return thunkAPI.rejectWithValue(
+      err.response?.data?.error || "Failed to delete task"
+    );
   }
-);
+});
 
-export const updateTaskOrder = createAsyncThunk(
-  "tasks/updateTaskOrder",
-  async (taskIds, thunkAPI) => {
-    try {
-      const res = await axios.put(
-        "http://localhost:5000/api/tasks/reorder",
-        { taskIds },
-        { withCredentials: true }
-      );
-      return res.data; // return updated ordered list (recommended)
-    } catch (err) {
-      return thunkAPI.rejectWithValue(
-        err.response?.data?.error || "Failed to update task order"
-      );
-    }
+// Update task order (drag & drop)
+export const updateTaskOrder = createAsyncThunk("tasks/updateTaskOrder", async (taskIds, thunkAPI) => {
+  try {
+    const res = await axiosInstance.put("/tasks/reorder", { taskIds });
+    return res.data;
+  } catch (err) {
+    return thunkAPI.rejectWithValue(
+      err.response?.data?.error || "Failed to update task order"
+    );
   }
-);
+});
 
-
+// Update task status (e.g. mark as Completed)
 export const updateTaskStatus = createAsyncThunk(
   "tasks/updateTaskStatus",
   async ({ id, status }, thunkAPI) => {
     try {
-      const res = await axios.patch(
-        `http://localhost:5000/api/tasks/${id}`,
-        { status },
-        { withCredentials: true }
-      );
+      const res = await axiosInstance.patch(`/tasks/${id}`, { status });
       return res.data;
     } catch (err) {
       return thunkAPI.rejectWithValue(

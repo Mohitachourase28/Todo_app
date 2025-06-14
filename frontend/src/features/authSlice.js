@@ -1,13 +1,11 @@
-// File: frontend/src/features/authSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
-
-axios.defaults.withCredentials = true;
+import axiosInstance from '../api/axios'; // updated import
 
 export const fetchUser = createAsyncThunk('auth/fetchUser', async () => {
-  const res = await axios.get('http://localhost:5000/api/auth/me');
+  const res = await axiosInstance.get('/auth/me');
   return res.data.user;
 });
+
 
 const authSlice = createSlice({
   name: 'auth',
