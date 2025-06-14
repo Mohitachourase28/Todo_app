@@ -6,7 +6,7 @@ import {
   deleteTask,
   updateTaskOrder,
 } from "../features/taskSlice";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import SortableRow from "../components/SortableRow.jsx";
 import { useNavigate } from "react-router-dom";
 import { useOutletContext } from "react-router-dom";
